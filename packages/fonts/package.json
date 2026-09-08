@@ -1,0 +1,55 @@
+{
+  "name": "@harf/fonts",
+  "version": "0.0.0",
+  "description": "Arabic font metric presets: recommended line heights, optical size adjustments, safe padding and mixed-script fallback chains.",
+  "license": "MIT",
+  "author": "Harf contributors",
+  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/fonts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harf-rtl/harf.git",
+    "directory": "packages/fonts"
+  },
+  "bugs": {
+    "url": "https://github.com/harf-rtl/harf/issues"
+  },
+  "keywords": [
+    "arabic",
+    "fonts",
+    "typography",
+    "line-height",
+    "cairo",
+    "tajawal",
+    "rtl"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  }
+}

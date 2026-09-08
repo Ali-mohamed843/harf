@@ -1,0 +1,31 @@
+name: Feature request
+description: Propose something Harf should do.
+labels: ['enhancement', 'needs triage']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What RTL or Arabic problem does this solve?
+      description: >
+        Describe the broken behaviour in a real app, not the API you want.
+        Harf exists for the hard cases; a generic wrapper around logical
+        properties is out of scope because CSS and Tailwind already do it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Can you show it breaking today?
+      description: Code, a screenshot, or a link. This is the strongest argument you can make.
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: Optional. A sketch is fine.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Workarounds you are using now

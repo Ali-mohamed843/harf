@@ -1,0 +1,92 @@
+name: Bug report
+description: Something in Harf behaves incorrectly.
+labels: ['bug', 'needs triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Harf's credibility depends on only claiming fixes for bugs that
+        actually reproduce. Please give us enough to reproduce it.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - '@harf/core'
+        - '@harf/react'
+        - '@harf/native'
+        - '@harf/next'
+        - '@harf/eslint-plugin'
+        - '@harf/fonts'
+        - docs site
+        - other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Harf version
+      placeholder: '0.1.0'
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Exact versions, please.
+      placeholder: |
+        react: 19.0.0
+        react-native: 0.76.5 (New Architecture: yes)
+        expo: 52.0.0
+        next: 15.1.0
+        platform: iOS 18.2 simulator / Pixel 8 Android 15 / Chrome 131 macOS
+      render: text
+    validations:
+      required: true
+
+  - type: dropdown
+    id: is-rtl
+    attributes:
+      label: Was I18nManager.isRTL true at the time?
+      options:
+        - 'true'
+        - 'false'
+        - 'not applicable (web)'
+        - 'do not know'
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: A link to a repo or Expo Snack, or the smallest code that shows it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Screenshots are very welcome for layout and typography issues.
+    validations:
+      required: true
+
+  - type: textarea
+    id: strings
+    attributes:
+      label: The exact strings involved
+      description: >
+        If this is a bidi, numeral, or typography issue, paste the literal text.
+        Do not paraphrase it — the bug is usually in the characters.
+      render: text

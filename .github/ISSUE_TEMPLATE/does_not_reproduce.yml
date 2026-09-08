@@ -1,0 +1,34 @@
+name: 'Claim: a documented bug no longer reproduces'
+description: Tell us a fix in Harf is now unnecessary on current versions.
+labels: ['credibility', 'needs triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is one of the most valuable issues you can open. If a bug Harf
+        claims to fix has been fixed upstream, we want to delete our fix and
+        correct the README.
+
+  - type: input
+    id: claim
+    attributes:
+      label: Which Harf claim or module?
+      placeholder: 'README limits table: TextInput caret under RTL'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tested
+    attributes:
+      label: What did you test, and on which exact versions?
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Screenshots, a recording, or a failing-then-passing test.
+    validations:
+      required: true

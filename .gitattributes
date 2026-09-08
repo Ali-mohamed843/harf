@@ -1,0 +1,9 @@
+* text=auto eol=lf
+pnpm-lock.yaml linguist-generated=true -diff
+*.png binary
+*.jpg binary
+*.gif binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary

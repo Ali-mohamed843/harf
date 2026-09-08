@@ -1,0 +1,13 @@
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/index.tsx'],
+  format: ['esm', 'cjs'],
+  dts: true,
+  sourcemap: true,
+  clean: true,
+  treeshake: true,
+  splitting: false,
+  target: 'es2022',
+  external: ['react', 'react-dom', 'next', '@harf/core', '@harf/react'],
+});

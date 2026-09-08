@@ -1,0 +1,69 @@
+{
+  "name": "@harf/next",
+  "version": "0.0.0",
+  "description": "Next.js App Router adapter for Harf: server-side dir on <html>, RSC-safe direction access, and a Tailwind plugin for mirroring and bidi utilities.",
+  "license": "MIT",
+  "author": "Harf contributors",
+  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/next#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harf-rtl/harf.git",
+    "directory": "packages/next"
+  },
+  "bugs": {
+    "url": "https://github.com/harf-rtl/harf/issues"
+  },
+  "keywords": [
+    "rtl",
+    "arabic",
+    "next",
+    "nextjs",
+    "app-router",
+    "rsc",
+    "tailwind",
+    "i18n"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@harf/core": "workspace:*",
+    "@harf/react": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "next": "^15.1.4",
+    "react": "^19.0.0",
+    "@types/react": "^19.0.7"
+  }
+}
