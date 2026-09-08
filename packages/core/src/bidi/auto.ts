@@ -10,7 +10,7 @@
 
 import type { Direction } from '../direction';
 import { classifyCodePoint, type CharClass } from './classify';
-import { FSI, LRI, PDI, RLI } from './controls';
+import { FSI, PDI, hasBidiControls, stripBidi } from './controls';
 
 /** A detected run of text that reads against the base direction. */
 export interface BidiRun {
@@ -88,8 +88,10 @@ const ATOMIC_PATTERNS: readonly AtomicPattern[] = [
     // which is precisely the copy-paste breakage this pattern exists to avoid.
     //
     // The final character class excludes sentence punctuation so a URL ending
-    // a sentence does not swallow the full stop.
-    re: /\b(?:[a-z][a-z0-9+.-]*:\/\/|www\.)\S*[^\s.,;:!?)\]}'"]/gi,
+    // a sentence does not swallow the full stop, and excludes *opening*
+    // brackets as well: a URL never ends with one, and swallowing it puts an
+    // unbalanced bracket inside the isolate.
+    re: /\b(?:[a-z][a-z0-9+.-]*:\/\/|www\.)\S*[^\s.,;:!?([{)\]}'"]/gi,
   },
   {
     // Email addresses.
@@ -125,62 +127,63 @@ interface Match {
   readonly reason: 'script' | 'atomic';
 }
 
-function collectAtomic(
-  text: string,
-  patterns: readonly AtomicPattern[],
-  from: number,
-  to: number,
-): Match[] {
-  const found: Match[] = [];
-  for (const pattern of patterns) {
-    const flags = pattern.re.flags.includes('g')
-      ? pattern.re.flags
-      : `${pattern.re.flags}g`;
-    const re = new RegExp(pattern.re.source, flags);
-    re.lastIndex = from;
-    let match: RegExpExecArray | null;
-    while ((match = re.exec(text)) !== null) {
-      const value = match[0];
-      if (value.length === 0) {
-        re.lastIndex += 1;
-        continue;
-      }
-      if (match.index + value.length > to) break;
-      if (pattern.accept !== undefined && !pattern.accept(value)) continue;
-      found.push({
-        start: match.index,
-        end: match.index + value.length,
-        reason: 'atomic',
-      });
-    }
-  }
-  return found;
-}
-
 /**
- * The spans of `text` that are *not* already wrapped in an isolate, as
- * `[from, to)` pairs.
+ * Finds every atomic unit, scanning left to right.
  *
- * A nested isolate counts as part of its parent, so a correctly annotated
- * string yields no scannable segments inside it at all.
+ * Deliberately sequential rather than "collect everything, then drop the
+ * overlaps". When one pattern's match swallows another's — `#hashtag1` beating
+ * `hashtag1.2.3` — a collect-then-filter pass loses the `2.3` that is still
+ * sitting in the gap. Restarting the search from the end of each accepted match
+ * finds it.
  */
-function unisolatedSegments(text: string): readonly (readonly [number, number])[] {
-  const segments: [number, number][] = [];
-  let depth = 0;
-  let start = 0;
+function collectAtomic(text: string, patterns: readonly AtomicPattern[]): Match[] {
+  const compiled = patterns.map((pattern) => ({
+    re: new RegExp(
+      pattern.re.source,
+      pattern.re.flags.includes('g') ? pattern.re.flags : `${pattern.re.flags}g`,
+    ),
+    accept: pattern.accept,
+  }));
 
-  for (let i = 0; i < text.length; i += 1) {
-    const char = text[i] as string;
-    if (char === FSI || char === LRI || char === RLI) {
-      if (depth === 0 && i > start) segments.push([start, i]);
-      depth += 1;
-    } else if (char === PDI && depth > 0) {
-      depth -= 1;
-      if (depth === 0) start = i + 1;
+  const found: Match[] = [];
+  let cursor = 0;
+
+  while (cursor < text.length) {
+    let best: Match | null = null;
+
+    for (const { re, accept } of compiled) {
+      re.lastIndex = cursor;
+      let match: RegExpExecArray | null;
+      while ((match = re.exec(text)) !== null) {
+        const value = match[0];
+        if (value.length === 0) {
+          re.lastIndex += 1;
+          continue;
+        }
+        if (accept !== undefined && !accept(value)) continue;
+        const candidate: Match = {
+          start: match.index,
+          end: match.index + value.length,
+          reason: 'atomic',
+        };
+        // Earliest wins; on a tie, the longer one.
+        if (
+          best === null ||
+          candidate.start < best.start ||
+          (candidate.start === best.start && candidate.end > best.end)
+        ) {
+          best = candidate;
+        }
+        break;
+      }
     }
+
+    if (best === null) break;
+    found.push(best);
+    cursor = best.end;
   }
-  if (depth === 0 && start < text.length) segments.push([start, text.length]);
-  return segments;
+
+  return found;
 }
 
 /** Drops any match overlapping one already accepted. Earlier, then longer, wins. */
@@ -208,16 +211,30 @@ function balanceBrackets(text: string, start: number, end: number): [number, num
   let s = start;
   let e = end;
 
+  // A closer at the very start belongs to a pair opened before the run, so it
+  // is simply dropped.
   while (s < e && CLOSERS.has(text[s] as string)) s += 1;
 
-  const unmatchedOpeners: number[] = [];
+  // A closer *inside* the run with no opener inside it is the other half of a
+  // pair that starts outside — end the run before it rather than enclose it.
+  const openStack: number[] = [];
   for (let i = s; i < e; i += 1) {
     const char = text[i] as string;
-    if (OPENERS.has(char)) unmatchedOpeners.push(i);
-    else if (CLOSERS.has(char) && unmatchedOpeners.length > 0) unmatchedOpeners.pop();
+    if (OPENERS.has(char)) {
+      openStack.push(i);
+    } else if (CLOSERS.has(char)) {
+      if (openStack.length > 0) openStack.pop();
+      else {
+        e = i;
+        break;
+      }
+    }
   }
-  const firstUnmatched = unmatchedOpeners[0];
-  if (firstUnmatched !== undefined) e = firstUnmatched;
+
+  // Now no unmatched closers remain in [s, e). Any opener still on the stack
+  // has its partner outside the run, so cut before the first of them.
+  const firstUnmatchedOpener = openStack.find((index) => index < e);
+  if (firstUnmatchedOpener !== undefined) e = firstUnmatchedOpener;
 
   while (e > s && WHITESPACE.test(text[e - 1] as string)) e -= 1;
   while (s < e && WHITESPACE.test(text[s] as string)) s += 1;
@@ -237,6 +254,14 @@ function scanScriptRuns(
   const len = to - from;
   const classes = new Array<CharClass>(len);
   for (let i = 0; i < len; i += 1) {
+    const unit = text.charCodeAt(from + i);
+    // A low surrogate takes the class of the pair it completes. Classifying it
+    // on its own gives 'N', which lets a run end between the two halves of a
+    // code point and emit an isolate that splits a character in two.
+    if (unit >= 0xdc00 && unit <= 0xdfff && i > 0) {
+      classes[i] = classes[i - 1] as CharClass;
+      continue;
+    }
     const code = text.codePointAt(from + i);
     classes[i] = code === undefined ? 'N' : classifyCodePoint(code);
   }
@@ -304,6 +329,11 @@ function scanScriptRuns(
  * test, in a debug overlay, or to decide that a particular string needs
  * hand-annotation instead.
  *
+ * Expects text with no bidi control characters in it. Offsets are reported
+ * against the string you pass, so `autoIsolate` strips first and calls this
+ * with the clean text; pass annotated text here and the offsets will be right
+ * but the runs will reflect the annotation. Use `stripBidi` first if in doubt.
+ *
  * @example
  * ```ts
  * import { findBidiRuns } from '@harf/core';
@@ -327,24 +357,17 @@ export function findBidiRuns(
       : [...ATOMIC_PATTERNS, ...options.patterns.map((re) => ({ re }))];
 
   const all: Match[] = [];
-
-  // Anything already sitting inside an isolate is left strictly alone. This is
-  // what makes the whole thing idempotent: running it over its own output adds
-  // nothing, so a value that passes through two render layers is not wrapped
-  // twice.
-  for (const [from, to] of unisolatedSegments(text)) {
-    const atomic = dedupe(collectAtomic(text, patterns, from, to));
-    let cursor = from;
-    for (const match of atomic) {
-      if (match.start > cursor) {
-        scanScriptRuns(text, cursor, match.start, base, isolateNumbers, all);
-      }
-      all.push(match);
-      cursor = match.end;
+  const atomic = collectAtomic(text, patterns);
+  let cursor = 0;
+  for (const match of atomic) {
+    if (match.start > cursor) {
+      scanScriptRuns(text, cursor, match.start, base, isolateNumbers, all);
     }
-    if (cursor < to) {
-      scanScriptRuns(text, cursor, to, base, isolateNumbers, all);
-    }
+    all.push(match);
+    cursor = match.end;
+  }
+  if (cursor < text.length) {
+    scanScriptRuns(text, cursor, text.length, base, isolateNumbers, all);
   }
 
   return (
@@ -394,14 +417,22 @@ export function findBidiRuns(
  * use `stripBidi` if you must.
  */
 export function autoIsolate(text: string, options: AutoIsolateOptions = {}): string {
-  const runs = findBidiRuns(text, options);
-  if (runs.length === 0) return text;
+  // Analyse the text with any existing bidi controls removed. Isolate
+  // characters change what the scanner sees — a word boundary appears where
+  // one did not exist, a previously-swallowed sub-match becomes visible — so
+  // running over annotated text would give a different answer than running
+  // over the original. Normalising first makes idempotence structural:
+  // autoIsolate(autoIsolate(x)) analyses exactly the same string both times.
+  const clean = hasBidiControls(text) ? stripBidi(text) : text;
+
+  const runs = findBidiRuns(clean, options);
+  if (runs.length === 0) return clean;
 
   let out = '';
   let cursor = 0;
   for (const run of runs) {
-    out += text.slice(cursor, run.start) + FSI + run.text + PDI;
+    out += clean.slice(cursor, run.start) + FSI + run.text + PDI;
     cursor = run.end;
   }
-  return out + text.slice(cursor);
+  return out + clean.slice(cursor);
 }

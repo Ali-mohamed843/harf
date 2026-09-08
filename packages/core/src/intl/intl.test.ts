@@ -295,3 +295,39 @@ describe('formatHijriDate', () => {
     expect(() => formatHijriDate(date, { locale: 'nonsense!!' })).not.toThrow();
   });
 });
+
+describe('regression: rounding large and awkward values', () => {
+  it('does not corrupt a large number', () => {
+    // The previous implementation nudged by an epsilon proportional to the
+    // scaled magnitude, which for 1e15 at three decimals added an absolute
+    // error of several hundred.
+    expect(formatNumber(1e15, { decimals: 3, grouping: false })).toBe(
+      '1000000000000000.000',
+    );
+    expect(formatNumber(123456789.123456, { decimals: 2, grouping: false })).toBe(
+      '123456789.12',
+    );
+  });
+
+  it('still rounds the binary-representation cases correctly', () => {
+    expect(formatNumber(1.005, { decimals: 2 })).toBe('1.01');
+    expect(formatNumber(8.575, { decimals: 2 })).toBe('8.58');
+    expect(formatNumber(2.675, { decimals: 2 })).toBe('2.68');
+    expect(formatNumber(999.995, { decimals: 2 })).toBe('1,000.00');
+  });
+
+  it('stays symmetric about zero at every scale', () => {
+    for (const value of [0.5, 2.5, 1.005, 1e15, 123456789.123456]) {
+      for (const decimals of [0, 2, 3]) {
+        expect(formatNumber(-value, { decimals })).toBe(
+          `-${formatNumber(value, { decimals })}`,
+        );
+      }
+    }
+  });
+
+  it('handles a very small value without producing exponent notation', () => {
+    expect(formatNumber(1e-7, { decimals: 2 })).toBe('0.00');
+    expect(formatNumber(1e-7, { decimals: 0 })).toBe('0');
+  });
+});

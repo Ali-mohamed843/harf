@@ -418,3 +418,29 @@ describe('the whole point: switching direction is just a re-render', () => {
     }
   });
 });
+
+describe('regression: resolving an already-resolved style', () => {
+  it('does not flip a row back, which would silently reverse the layout', () => {
+    // flexDirection is an involution: 'row' → 'row-reverse' → 'row'. A helper
+    // that resolves a style already resolved by another helper would quietly
+    // lay the row out the wrong way, and nothing in the output looks wrong.
+    const once = resolveStyle({ flexDirection: 'row', paddingStart: 8 }, 'rtl');
+    expect(once).toEqual({ flexDirection: 'row-reverse', paddingRight: 8 });
+
+    const twice = resolveStyle(once, 'rtl');
+    expect(twice).toEqual(once);
+    expect(twice).toBe(once);
+  });
+
+  it('is a no-op in the other direction too', () => {
+    const ltr = resolveStyle({ flexDirection: 'row' }, 'ltr');
+    expect(resolveStyle(ltr, 'rtl')).toBe(ltr);
+  });
+
+  it('leaves a sheet from createStyles alone when resolved again', () => {
+    const styles = createStyles({ row: { flexDirection: 'row', paddingStart: 8 } });
+    const resolved = styles('rtl').row;
+    expect(resolveStyle(resolved, 'rtl')).toBe(resolved);
+    expect(resolveStyle(resolved, 'ltr')).toBe(resolved);
+  });
+});

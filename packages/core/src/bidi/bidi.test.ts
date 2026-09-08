@@ -457,3 +457,73 @@ describe('autoIsolate — regression guards', () => {
     }
   });
 });
+
+describe('regression: idempotence through re-annotation', () => {
+  it('does not find new runs once isolates have changed the word boundaries', () => {
+    // '...9190www.example.org' has no word boundary before 'www', so the URL
+    // pattern does not match. After the phone number is isolated, the PDI
+    // creates one — a second pass would isolate the URL that the first pass
+    // could not see.
+    const source = '+20 114 919 9190www.example.org';
+    const once = autoIsolate(source);
+    expect(autoIsolate(once)).toBe(once);
+    expect(stripBidi(once)).toBe(source);
+  });
+
+  it('does not find a sub-match that the first pass had swallowed', () => {
+    // '#hashtag1' beats 'hashtag1.2.3', leaving '.2.3' in the gap. Splitting
+    // the string at the isolate boundary would expose '2.3' to the dotted
+    // identifier pattern on a second pass.
+    const source = '#hashtag1.2.3Pro';
+    const once = autoIsolate(source);
+    expect(autoIsolate(once)).toBe(once);
+    expect(stripBidi(once)).toBe(source);
+  });
+
+  it('finds the sub-match on the first pass, not the second', () => {
+    // The sequential scan restarts from the end of each accepted match, so the
+    // dotted identifier left in the gap is found straight away rather than
+    // surfacing only once isolation has split the string.
+    expect(findBidiRuns('#hashtag1.2.3Pro').map((run) => run.text)).toEqual([
+      '#hashtag1',
+      '2.3Pro',
+    ]);
+  });
+});
+
+describe('regression: characters outside the Basic Multilingual Plane', () => {
+  it('never cuts a surrogate pair in half', () => {
+    // Mathematical Bold Latin is a pair of code units. Classifying the low
+    // surrogate on its own makes it neutral, which lets a run end between the
+    // two halves and emit an isolate that splits a character.
+    const source = 'مرحبا 𝐊𝐚𝐫𝐧𝐚𝐤 اليوم';
+    for (const run of findBidiRuns(source)) {
+      const first = run.text.charCodeAt(0);
+      const last = run.text.charCodeAt(run.text.length - 1);
+      expect(first >= 0xdc00 && first <= 0xdfff).toBe(false);
+      expect(last >= 0xd800 && last <= 0xdbff).toBe(false);
+    }
+    expect(stripBidi(autoIsolate(source))).toBe(source);
+  });
+
+  it('treats an astral Latin run as one unit', () => {
+    const runs = findBidiRuns('مرحبا 𝐊𝐚𝐫𝐧𝐚𝐤 اليوم');
+    expect(runs).toHaveLength(1);
+    expect(runs[0]?.text).toBe('𝐊𝐚𝐫𝐧𝐚𝐤');
+  });
+});
+
+describe('regression: stray brackets', () => {
+  it('ends a run before a closing bracket whose partner is outside it', () => {
+    for (const run of findBidiRuns('Holidays.)𝐊𝐚𝐫𝐧𝐚𝐤')) {
+      expect(run.text).not.toContain(')');
+    }
+  });
+
+  it('never lets a URL swallow a trailing opening brace', () => {
+    const runs = findBidiRuns('https://karnak.com/عروض?ref=ar{');
+    for (const run of runs) {
+      expect(run.text.endsWith('{')).toBe(false);
+    }
+  });
+});

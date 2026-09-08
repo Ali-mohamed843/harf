@@ -25,6 +25,17 @@ const CACHE: Readonly<Record<Direction, WeakMap<object, StyleObject>>> = Object.
 /** Style objects with no logical properties at all, so we can skip them fast. */
 const PASSTHROUGH = new WeakSet<object>();
 
+/**
+ * Objects this module has already produced.
+ *
+ * Resolution is **not** an idempotent operation on its own:
+ * `flexDirection: 'row'` becomes `'row-reverse'` under RTL, and resolving that
+ * result again would turn it back into `'row'`. Silently flipping a row back is
+ * the kind of bug that survives review, so a resolved object is recognised on
+ * sight and returned untouched.
+ */
+const RESOLVED = new WeakSet<object>();
+
 let hits = 0;
 let misses = 0;
 
@@ -33,7 +44,7 @@ let misses = 0;
  * there is nothing to resolve, so downstream reference equality keeps working.
  */
 function resolveObject(style: StyleObject, dir: Direction): StyleObject {
-  if (PASSTHROUGH.has(style)) {
+  if (PASSTHROUGH.has(style) || RESOLVED.has(style)) {
     hits += 1;
     return style;
   }
@@ -83,6 +94,7 @@ function resolveObject(style: StyleObject, dir: Direction): StyleObject {
 
   const frozen = Object.freeze(out);
   CACHE[dir].set(style, frozen);
+  RESOLVED.add(frozen);
   return frozen;
 }
 
@@ -126,6 +138,21 @@ function resolveObject(style: StyleObject, dir: Direction): StyleObject {
  * ```ts
  * resolveStyle({ marginStart: 8, marginLeft: 99 }, 'rtl');
  * // { marginLeft: 99, marginRight: 8 } — your escape hatch is respected
+ * ```
+ *
+ * @remarks
+ * Resolving an already-resolved style is a no-op, in either direction. This
+ * matters: `flexDirection: 'row'` becomes `'row-reverse'` under RTL, so a naive
+ * second pass would turn it back into `'row'` and quietly lay the row out the
+ * wrong way. Harf recognises its own output and returns it untouched, so
+ * composing style helpers that each call `resolveStyle` cannot corrupt a
+ * layout.
+ *
+ * @example Resolving twice is safe
+ * ```ts
+ * const once = resolveStyle({ flexDirection: 'row' }, 'rtl');
+ * // { flexDirection: 'row-reverse' }
+ * resolveStyle(once, 'rtl'); // unchanged — not flipped back
  * ```
  */
 export function resolveStyle<T extends StyleInput>(style: T, dir: Direction): T {
