@@ -42,10 +42,32 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./server": {
+      "import": {
+        "types": "./dist/server.d.ts",
+        "default": "./dist/server.js"
+      },
+      "require": {
+        "types": "./dist/server.d.cts",
+        "default": "./dist/server.cjs"
+      }
+    },
+    "./tailwind": {
+      "import": {
+        "types": "./dist/tailwind.d.ts",
+        "default": "./dist/tailwind.js"
+      },
+      "require": {
+        "types": "./dist/tailwind.d.cts",
+        "default": "./dist/tailwind.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
+    "server/",
+    "tailwind/",
     "README.md",
     "LICENSE"
   ],
@@ -53,7 +75,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/use-client.mjs dist/index.js dist/index.cjs",
     "dev": "tsup --watch",
     "clean": "rimraf dist .turbo",
     "lint": "eslint src",
@@ -64,7 +86,8 @@
   },
   "dependencies": {
     "@harf/core": "workspace:*",
-    "@harf/react": "workspace:*"
+    "@harf/react": "workspace:*",
+    "@harf/fonts": "workspace:*"
   },
   "peerDependencies": {
     "next": ">=14.0.0",
@@ -76,5 +99,15 @@
     "next": "^15.1.4",
     "publint": "^0.3.2",
     "react": "^18.3.1"
+  },
+  "typesVersions": {
+    "*": {
+      "server": [
+        "./dist/server.d.ts"
+      ],
+      "tailwind": [
+        "./dist/tailwind.d.ts"
+      ]
+    }
   }
 }

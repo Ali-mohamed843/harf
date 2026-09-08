@@ -1,0 +1,8 @@
+{
+  "name": "@harf/next/tailwind",
+  "private": true,
+  "main": "../dist/tailwind.cjs",
+  "module": "../dist/tailwind.js",
+  "types": "../dist/tailwind.d.ts",
+  "sideEffects": false
+}

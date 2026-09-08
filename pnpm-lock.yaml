@@ -177,6 +177,9 @@ importers:
       '@harf/core':
         specifier: workspace:*
         version: link:../core
+      '@harf/fonts':
+        specifier: workspace:*
+        version: link:../fonts
       '@harf/react':
         specifier: workspace:*
         version: link:../react

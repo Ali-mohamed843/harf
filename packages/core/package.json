@@ -73,7 +73,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/use-client.mjs dist/react.js dist/react.cjs",
     "dev": "tsup --watch",
     "clean": "rimraf dist .turbo",
     "lint": "eslint src",
