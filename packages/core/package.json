@@ -65,7 +65,9 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "react/",
+    "testing/"
   ],
   "publishConfig": {
     "access": "public"
@@ -95,6 +97,16 @@
   "peerDependenciesMeta": {
     "react": {
       "optional": true
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./dist/react.d.ts"
+      ],
+      "testing": [
+        "./dist/testing.d.ts"
+      ]
     }
   }
 }

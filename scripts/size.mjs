@@ -79,6 +79,15 @@ const SCENARIOS = [
     external: ['react', 'react/jsx-runtime', 'react-native'],
   },
   {
+    name: '@harf/react — provider + hooks only',
+    from: '@harf/react',
+    code: `
+      import { DirectionProvider, useDirection, useLogicalStyles } from '@harf/react';
+      export { DirectionProvider, useDirection, useLogicalStyles };
+    `,
+    external: ['react', 'react/jsx-runtime'],
+  },
+  {
     name: '@harf/fonts — everything',
     from: '@harf/fonts',
     code: `export * from '@harf/fonts';`,
@@ -95,7 +104,10 @@ function format(bytes) {
 const root = process.cwd();
 const ALIAS = {
   '@harf/core': join(root, 'packages/core/dist/index.js'),
+  '@harf/core/react': join(root, 'packages/core/dist/react.js'),
   '@harf/core/testing': join(root, 'packages/core/dist/testing.js'),
+  '@harf/react/testing': join(root, 'packages/react/dist/testing.js'),
+  '@harf/native/testing': join(root, 'packages/native/dist/testing.js'),
   '@harf/react': join(root, 'packages/react/dist/index.js'),
   '@harf/native': join(root, 'packages/native/dist/index.js'),
   '@harf/next': join(root, 'packages/next/dist/index.js'),

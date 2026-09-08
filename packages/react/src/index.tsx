@@ -40,6 +40,13 @@ import {
   type NumeralSystem,
 } from '@harf/core';
 import { useDirection, useHarf } from '@harf/core/react';
+import {
+  arabicSafeText,
+  fontFamilyStack,
+  metricsFor,
+  type ArabicFontMetrics,
+  type ArabicSafeTextStyle,
+} from '@harf/fonts';
 
 export {
   DirectionProvider,
@@ -331,3 +338,45 @@ export function useDirAttribute(): { readonly dir: Direction } {
 }
 
 export { autoIsolate, isolateText as isolate, stripBidi };
+
+/**
+ * A font size, line height and padding that will not clip an Arabic face.
+ *
+ * Arabic typefaces need more vertical room than Latin ones. A `lineHeight` of
+ * `fontSize * 1.2` — perfectly comfortable for Latin — cuts the tail off ج and
+ * the dots off ي in every family `@harf/fonts` ships a preset for.
+ *
+ * @example
+ * ```tsx
+ * import { useArabicSafeText } from '@harf/react';
+ *
+ * function Body({ children }: { children: string }) {
+ *   const style = useArabicSafeText({ family: 'Cairo', fontSize: 16 });
+ *   return <p style={style}>{children}</p>;
+ * }
+ * ```
+ *
+ * @example Matching apparent size against Latin
+ * ```tsx
+ * const style = useArabicSafeText({
+ *   family: 'Tajawal',
+ *   fontSize: 16,
+ *   opticalAdjust: true,
+ * });
+ * ```
+ */
+export function useArabicSafeText(options: {
+  readonly family?: string;
+  readonly fontSize: number;
+  readonly opticalAdjust?: boolean;
+  readonly lineHeight?: number;
+}): ArabicSafeTextStyle {
+  const { family, fontSize, opticalAdjust, lineHeight } = options;
+  return useMemo(
+    () => arabicSafeText({ family, fontSize, opticalAdjust, lineHeight }),
+    [family, fontSize, opticalAdjust, lineHeight],
+  );
+}
+
+export { arabicSafeText, fontFamilyStack, metricsFor };
+export type { ArabicFontMetrics, ArabicSafeTextStyle };

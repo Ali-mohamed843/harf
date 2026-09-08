@@ -13,6 +13,7 @@ export default defineConfig({
     'react',
     'react-dom',
     '@harf/core',
+    '@harf/fonts',
     '@harf/core/react',
     '@harf/core/testing',
     '@testing-library/react',

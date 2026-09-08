@@ -56,7 +56,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "testing/"
   ],
   "publishConfig": {
     "access": "public"
@@ -72,7 +73,8 @@
     "check:exports": "publint --strict && attw --pack ."
   },
   "dependencies": {
-    "@harf/core": "workspace:*"
+    "@harf/core": "workspace:*",
+    "@harf/fonts": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -91,5 +93,12 @@
     "react": "^18.3.1",
     "react-native": "^0.76.9",
     "react-test-renderer": "^18.3.1"
+  },
+  "typesVersions": {
+    "*": {
+      "testing": [
+        "./dist/testing.d.ts"
+      ]
+    }
   }
 }

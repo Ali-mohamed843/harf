@@ -97,10 +97,6 @@ importers:
         version: 18.3.1(react@18.3.1)
 
   packages/eslint-plugin:
-    dependencies:
-      eslint:
-        specifier: '>=8.57.0'
-        version: 9.39.5(jiti@2.6.1)
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: ^0.18.5
@@ -108,6 +104,15 @@ importers:
       '@types/eslint':
         specifier: ^9.6.1
         version: 9.6.1
+      '@types/estree':
+        specifier: ^1.0.6
+        version: 1.0.9
+      '@typescript-eslint/parser':
+        specifier: ^8.20.0
+        version: 8.70.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.9.3)
+      eslint:
+        specifier: ^9.18.0
+        version: 9.39.5(jiti@2.6.1)
       publint:
         specifier: ^0.3.2
         version: 0.3.24
@@ -126,6 +131,9 @@ importers:
       '@harf/core':
         specifier: workspace:*
         version: link:../core
+      '@harf/fonts':
+        specifier: workspace:*
+        version: link:../fonts
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: ^0.18.5
@@ -194,6 +202,9 @@ importers:
       '@harf/core':
         specifier: workspace:*
         version: link:../core
+      '@harf/fonts':
+        specifier: workspace:*
+        version: link:../fonts
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: ^0.18.5

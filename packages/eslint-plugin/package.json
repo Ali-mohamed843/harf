@@ -67,6 +67,9 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@types/eslint": "^9.6.1",
+    "@types/estree": "^1.0.6",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
     "publint": "^0.3.2"
   }
 }

@@ -49,6 +49,12 @@ import {
   type NumeralSystem,
 } from '@harf/core';
 import { useDirection, useHarf } from '@harf/core/react';
+import {
+  arabicSafeText,
+  fontFamilyStack,
+  metricsFor,
+  type ArabicFontMetrics,
+} from '@harf/fonts';
 
 export {
   DirectionProvider,
@@ -466,3 +472,57 @@ export function useDirectionalData<T>(data: readonly T[]): readonly T[] {
   const { dir } = useDirection();
   return useMemo(() => (dir === 'rtl' ? [...data].reverse() : data), [data, dir]);
 }
+
+/** What {@link useArabicSafeText} returns, in React Native style shape. */
+export interface ArabicTextStyle {
+  readonly fontSize: number;
+  readonly lineHeight: number;
+  readonly paddingVertical: number;
+  /** The Arabic family, for React Native's single-family `fontFamily`. */
+  readonly fontFamily: string | undefined;
+}
+
+/**
+ * A font size, line height and padding that will not clip an Arabic face.
+ *
+ * Arabic typefaces need more vertical room than Latin ones. A `lineHeight` of
+ * `fontSize * 1.2` — perfectly comfortable for Latin — cuts the tail off ج and
+ * the dots off ي in every family `@harf/fonts` ships a preset for. On React
+ * Native the failure is worse than on the web, because a `<Text>` inside a
+ * fixed-height row clips silently rather than overflowing visibly.
+ *
+ * React Native takes a single `fontFamily` rather than a stack, so only the
+ * Arabic family is returned. Use {@link fontFamilyStack} on the web, and load
+ * a family with genuine Latin coverage (IBM Plex Sans Arabic, Rubik) if your
+ * text mixes scripts.
+ *
+ * @example
+ * ```tsx
+ * import { useArabicSafeText } from '@harf/native';
+ *
+ * function Body({ children }: { children: string }) {
+ *   const style = useArabicSafeText({ family: 'Cairo', fontSize: 16 });
+ *   return <Text style={style}>{children}</Text>;
+ * }
+ * ```
+ */
+export function useArabicSafeText(options: {
+  readonly family?: string;
+  readonly fontSize: number;
+  readonly opticalAdjust?: boolean;
+  readonly lineHeight?: number;
+}): ArabicTextStyle {
+  const { family, fontSize, opticalAdjust, lineHeight } = options;
+  return useMemo(() => {
+    const style = arabicSafeText({ family, fontSize, opticalAdjust, lineHeight });
+    return {
+      fontSize: style.fontSize,
+      lineHeight: style.lineHeight,
+      paddingVertical: style.paddingVertical,
+      fontFamily: family,
+    };
+  }, [family, fontSize, opticalAdjust, lineHeight]);
+}
+
+export { arabicSafeText, fontFamilyStack, metricsFor };
+export type { ArabicFontMetrics };
