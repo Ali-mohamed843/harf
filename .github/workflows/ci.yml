@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        task: [typecheck, lint, test, build]
+        task: [typecheck, lint, test, build, check:exports]
     steps:
       - uses: actions/checkout@v4
 

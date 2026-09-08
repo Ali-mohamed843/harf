@@ -22,6 +22,9 @@
     "bidi",
     "direction"
   ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",
@@ -29,9 +32,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -50,7 +58,8 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "check:exports": "publint --strict && attw --pack ."
   },
   "dependencies": {
     "@harf/core": "workspace:*"
@@ -60,8 +69,10 @@
     "react-native": ">=0.73.0"
   },
   "devDependencies": {
-    "react": "^19.0.0",
-    "@types/react": "^19.0.7",
-    "react-native": "^0.76.6"
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@types/react": "^18.3.18",
+    "publint": "^0.3.2",
+    "react": "^18.3.1",
+    "react-native": "^0.76.9"
   }
 }
