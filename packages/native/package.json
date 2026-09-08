@@ -41,6 +41,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./limits": {
+      "import": {
+        "types": "./dist/limits.d.ts",
+        "default": "./dist/limits.js"
+      },
+      "require": {
+        "types": "./dist/limits.d.cts",
+        "default": "./dist/limits.cjs"
+      }
+    },
     "./testing": {
       "import": {
         "types": "./dist/testing.d.ts",
@@ -55,9 +65,10 @@
   },
   "files": [
     "dist",
+    "limits/",
+    "testing/",
     "README.md",
-    "LICENSE",
-    "testing/"
+    "LICENSE"
   ],
   "publishConfig": {
     "access": "public"
@@ -96,6 +107,9 @@
   },
   "typesVersions": {
     "*": {
+      "limits": [
+        "./dist/limits.d.ts"
+      ],
       "testing": [
         "./dist/testing.d.ts"
       ]

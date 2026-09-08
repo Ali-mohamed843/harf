@@ -1,0 +1,30 @@
+{
+  "name": "docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint app components",
+    "test": "node scripts/verify-build.mjs",
+    "clean": "rimraf .next .turbo"
+  },
+  "dependencies": {
+    "@harf/core": "workspace:*",
+    "@harf/fonts": "workspace:*",
+    "@harf/native": "workspace:*",
+    "@harf/next": "workspace:*",
+    "@harf/react": "workspace:*",
+    "next": "^14.2.23",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "typescript": "^5.7.3"
+  }
+}

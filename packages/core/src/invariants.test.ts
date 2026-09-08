@@ -299,7 +299,7 @@ describe('style resolution invariants', () => {
         style[entry[0]] = entry[1][Math.floor(next() * entry[1].length)];
       }
     }
-    return style as StyleObject;
+    return style;
   }
 
   it('never leaves a logical property behind, in either direction', () => {

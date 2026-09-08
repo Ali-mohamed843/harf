@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Harf Demo",
+    "slug": "harf-demo",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "harf",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "splash": { "resizeMode": "contain", "backgroundColor": "#0b1120" },
+    "ios": { "supportsTablet": true },
+    "android": { "adaptiveIcon": { "backgroundColor": "#0b1120" } },
+    "web": { "bundler": "metro" },
+    "plugins": ["expo-router"],
+    "extra": {
+      "note": "Deliberately does NOT set forceRTL. Harf drives direction from React context; see assertHarfConfiguration()."
+    }
+  }
+}

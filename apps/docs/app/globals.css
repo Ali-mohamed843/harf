@@ -1,0 +1,279 @@
+:root {
+  --bg: #0b1120;
+  --surface: #151d2e;
+  --surface-alt: #1d2740;
+  --border: #2a3550;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-text: #0b1120;
+  --good: #4ade80;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: 'IBM Plex Sans Arabic', Inter, system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  /* Arabic faces need more vertical room than Latin ones; @harf/fonts puts
+     the safe multiplier for this family at 1.6. */
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+/* Everything below is logical: no `left`, no `right`, no `margin-left`.
+   The `dir` attribute on <html> — set server-side — does the rest. */
+
+h1,
+h2,
+h3 {
+  text-align: start;
+  line-height: 1.3;
+  margin: 0;
+}
+
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.25rem;
+  margin-block-start: 2.5rem;
+}
+
+p {
+  text-align: start;
+  color: var(--muted);
+  margin-block: 0.75rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 20px;
+  border-block-end: 1px solid var(--border);
+  margin-block-end: 24px;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 18px;
+  /* A start-side accent bar. Under RTL it must move to the other edge. */
+  border-inline-start: 4px solid var(--accent);
+  border-start-start-radius: 4px;
+  border-end-start-radius: 4px;
+  margin-block: 16px;
+}
+
+.card h3 {
+  font-size: 1rem;
+  margin-block-end: 8px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.mono,
+code,
+pre {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+pre {
+  background: var(--surface-alt);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: start;
+  /* A code block is left-to-right whatever the page direction. */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+button,
+.button {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.button.ghost {
+  background: var(--surface-alt);
+  color: var(--text);
+  font-weight: 600;
+}
+
+textarea {
+  width: 100%;
+  min-height: 190px;
+  background: var(--surface-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  resize: vertical;
+  /* The editor is code, so it stays LTR regardless of the page. */
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
+input[type='text'] {
+  width: 100%;
+  background: var(--surface-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+/* The split playground. Each pane forces its own direction, so the two are
+   genuinely side by side rather than both following the page. */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pane {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 220px;
+}
+
+.pane[dir='ltr'] {
+  direction: ltr;
+}
+.pane[dir='rtl'] {
+  direction: rtl;
+}
+
+.pane-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-block-end: 10px;
+  /* The label describes the pane, so it follows the pane. */
+  text-align: start;
+}
+
+.preview-box {
+  background: var(--surface-alt);
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 120px;
+}
+
+.error {
+  color: var(--bad);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  text-align: start;
+  direction: ltr;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: start;
+  padding: 8px 10px;
+  border-block-end: 1px solid var(--border);
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status-handled {
+  color: var(--good);
+}
+.status-partial {
+  color: var(--warn);
+}
+.status-needs-restart {
+  color: var(--bad);
+}
+.status-not-applicable {
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--muted);
+}
+
+.runs mark {
+  background: rgba(56, 189, 248, 0.25);
+  color: var(--text);
+  border-radius: 3px;
+  padding: 0 2px;
+}

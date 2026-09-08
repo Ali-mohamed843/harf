@@ -1,0 +1,8 @@
+{
+  "name": "@harf/native/limits",
+  "private": true,
+  "main": "../dist/limits.cjs",
+  "module": "../dist/limits.js",
+  "types": "../dist/limits.d.ts",
+  "sideEffects": false
+}

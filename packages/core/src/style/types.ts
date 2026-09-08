@@ -8,8 +8,17 @@
  * @module
  */
 
-/** A single style value. Numbers, strings, and nested transform arrays. */
-export type StyleValue = string | number | boolean | null | undefined | object;
+/**
+ * A single style value.
+ *
+ * Deliberately `unknown` rather than a union of the types React Native happens
+ * to accept. Harf only ever *moves* a value from one property name to another;
+ * it inspects one only to map `textAlign: 'start'` and `flexDirection: 'row'`,
+ * and it guards those with a `typeof` check. Narrowing the type here would buy
+ * no safety and would reject the `Record<string, unknown>` that callers
+ * naturally have — which is friction with nothing on the other side of it.
+ */
+export type StyleValue = unknown;
 
 /** A flat style object, possibly containing logical properties. */
 export type StyleObject = Readonly<Record<string, StyleValue>>;
