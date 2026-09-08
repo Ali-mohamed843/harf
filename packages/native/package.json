@@ -41,6 +41,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./testing": {
+      "import": {
+        "types": "./dist/testing.d.ts",
+        "default": "./dist/testing.js"
+      },
+      "require": {
+        "types": "./dist/testing.d.cts",
+        "default": "./dist/testing.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -57,8 +67,8 @@
     "clean": "rimraf dist .turbo",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "check:exports": "publint --strict && attw --pack ."
   },
   "dependencies": {
@@ -70,9 +80,16 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "@babel/core": "^7.26.0",
+    "@react-native/babel-preset": "^0.76.9",
+    "@testing-library/react-native": "^12.9.0",
+    "@types/jest": "^29.5.14",
     "@types/react": "^18.3.18",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
     "publint": "^0.3.2",
     "react": "^18.3.1",
-    "react-native": "^0.76.9"
+    "react-native": "^0.76.9",
+    "react-test-renderer": "^18.3.1"
   }
 }

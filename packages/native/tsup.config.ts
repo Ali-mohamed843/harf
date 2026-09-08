@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.tsx'],
+  entry: { index: 'src/index.tsx', testing: 'src/testing.ts' },
   format: ['esm', 'cjs'],
   dts: true,
   sourcemap: true,
@@ -9,5 +9,12 @@ export default defineConfig({
   treeshake: true,
   splitting: false,
   target: 'es2022',
-  external: ['react', 'react-native', '@harf/core'],
+  external: [
+    'react',
+    'react-native',
+    '@harf/core',
+    '@harf/core/react',
+    '@harf/core/testing',
+    '@testing-library/react-native',
+  ],
 });

@@ -48,6 +48,43 @@ describe('shouldMirror — things that must mirror', () => {
   });
 });
 
+describe('shouldMirror — the names real icon sets actually use', () => {
+  // A registry that only knows 'chevron-left' is useless to an Expo app, which
+  // writes 'chevron-forward'. Each of these is the spelling a widely used set
+  // ships, and each was added because a test caught it missing.
+  it.each([
+    ['Ionicons', 'chevron-forward'],
+    ['Ionicons', 'chevron-back'],
+    ['Ionicons', 'arrow-forward'],
+    ['Ionicons', 'arrow-back'],
+    ['Ionicons', 'arrow-redo'],
+    ['Ionicons', 'arrow-undo'],
+    ['Ionicons', 'caret-forward'],
+    ['Ionicons', 'caret-back'],
+    ['Material', 'keyboard-arrow-left'],
+    ['Material', 'keyboard-arrow-right'],
+    ['Material', 'navigate-before'],
+    ['Material', 'navigate-next'],
+    ['Material', 'format-indent-increase'],
+    ['Material Community', 'menu-left'],
+    ['Material Community', 'menu-right'],
+    ['Material Community', 'page-first'],
+    ['Material Community', 'page-last'],
+    ['Material Community', 'step-forward'],
+    ['Material Community', 'step-backward'],
+    ['Feather', 'chevrons-left'],
+    ['Feather', 'chevrons-right'],
+    ['Feather', 'corner-up-left'],
+    ['Feather', 'corner-down-right'],
+    ['Feather', 'log-out'],
+    ['Lucide', 'circle-chevron-left'],
+    ['Lucide', 'circle-chevron-right'],
+  ])('knows the %s name %s', (_set, name) => {
+    expect(shouldMirror(name, 'rtl')).toBe(true);
+    expect(shouldMirror(name, 'ltr')).toBe(false);
+  });
+});
+
 describe('shouldMirror — things that must NOT mirror', () => {
   it.each([
     ['clock', 'a clock face runs clockwise everywhere'],

@@ -196,7 +196,9 @@ describe('forEachDirection', () => {
 });
 
 declare module 'vitest' {
-  interface Matchers<T = unknown> {
+  // Must mirror @vitest/expect's own signature exactly, or TypeScript rejects
+  // the augmentation with TS2428.
+  interface Matchers<T = any> {
     toHaveNoPhysicalProperties(): T;
     toHaveNoUnresolvedLogicalProperties(): T;
   }

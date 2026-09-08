@@ -5,5 +5,6 @@ export default defineConfig({
     name: '@harf/react',
     environment: 'jsdom',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    globals: true,
   },
 });
