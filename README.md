@@ -352,12 +352,12 @@ bundler actually includes.
 | `@harf/react` — provider + hooks only     |  2.98 KB | **1.13 KB** |
 | `@harf/core` — mirroring registry only    |  8.66 KB |     2.94 KB |
 | `@harf/core` — numerals only              |  8.94 KB |     3.12 KB |
-| `@harf/core` — direction + logical styles | 10.13 KB |     3.69 KB |
-| `@harf/core` — currency only              | 10.08 KB |     3.70 KB |
-| `@harf/core` — bidi isolation only        | 12.02 KB |     4.67 KB |
-| `@harf/core` — everything                 | 21.17 KB |     8.03 KB |
-| `@harf/react` — everything                | 22.97 KB |     8.23 KB |
-| `@harf/native` — everything               | 29.44 KB |    10.42 KB |
+| `@harf/core` — direction + logical styles | 10.16 KB |     3.70 KB |
+| `@harf/core` — currency only              | 10.16 KB |     3.73 KB |
+| `@harf/core` — bidi isolation only        | 12.11 KB |     4.72 KB |
+| `@harf/core` — everything                 | 21.34 KB |     8.12 KB |
+| `@harf/react` — everything                | 23.17 KB |     8.31 KB |
+| `@harf/native` — everything               | 29.68 KB |    10.52 KB |
 | `@harf/fonts`                             |  3.79 KB |     1.36 KB |
 
 `@harf/core` has **zero runtime dependencies** and always will. `react` is an
@@ -374,13 +374,40 @@ optional peer for the `@harf/core/react` subpath only.
 | [`@harf/eslint-plugin`](./packages/eslint-plugin) | Lint rules with autofix                              |
 | [`@harf/fonts`](./packages/fonts)                 | Arabic font metric presets                           |
 
+## Try it
+
+```bash
+pnpm install && pnpm build
+
+pnpm --filter docs dev             # the docs site and playground, on :3100
+pnpm --filter example-native start # the Expo demo — scan the QR with Expo Go
+```
+
+[`apps/docs`](./apps/docs) is a Next.js App Router site whose playground renders
+both directions from one source object, live. It is also the end-to-end proof of
+the no-flash claim: its own test suite reads the prerendered HTML and asserts
+`dir="rtl"` sits on `<html>` before the first `<script>`.
+
+[`apps/example-native`](./apps/example-native) puts every feature on one screen.
+The switch counter is the point — it survives the language change, because
+nothing restarts.
+
 ## Status
 
-Pre-alpha, not yet published to npm. 578 tests across six packages; `@harf/core`
-is at 98% line and 100% function coverage with thresholds enforced in CI.
+Pre-alpha, not yet published to npm. **670 tests** across eight workspace
+packages. `@harf/core` is at 98.6% line and 100% function coverage, with
+thresholds enforced in CI.
 
-Every claim on this page is backed by a test. If you find one that is not,
-[that is a bug](./CONTRIBUTING.md) and the most useful issue you can open.
+That includes a property-test suite which generates ~2400 mixed-script strings
+and style objects and asserts the invariants — reversibility, idempotence,
+non-overlapping runs, no split surrogate pairs, symmetric rounding. It found
+five real bugs the example-based tests had missed; each now has a named
+regression test beside it.
+
+Every claim on this page is backed by a test in
+[`packages/core/src/readme.test.ts`](./packages/core/src/readme.test.ts). If you
+find one that is not, [that is a bug](./CONTRIBUTING.md) and the most useful
+issue you can open.
 
 ## Development
 
@@ -389,9 +416,15 @@ Requires Node ≥ 20.11 and pnpm ≥ 9.
 ```bash
 pnpm install
 pnpm build && pnpm test
-pnpm size          # regenerate the weight table
-pnpm docs:limits   # regenerate the limits table
+pnpm typecheck && pnpm lint
+pnpm check:exports # publint + attw, all four resolution modes
+pnpm size          # regenerate the weight table above
+pnpm docs:limits   # regenerate the limits table above
 ```
+
+`@harf/native` is tested with Jest rather than Vitest: React Native ships
+untranspiled Flow that Vitest cannot parse, and `@testing-library/react-native`
+is built for Jest. Everything else runs on Vitest.
 
 ## License
 
