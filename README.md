@@ -4,7 +4,7 @@
 
 **An RTL and Arabic toolkit for React Native and Next.js.**
 
-[![CI](https://github.com/harf-rtl/harf/actions/workflows/ci.yml/badge.svg)](https://github.com/harf-rtl/harf/actions/workflows/ci.yml)
+[![CI](https://github.com/Ali-mohamed843/harf/actions/workflows/ci.yml/badge.svg)](https://github.com/Ali-mohamed843/harf/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 **Switch language without restarting the app.** 8 KB. Zero runtime dependencies.

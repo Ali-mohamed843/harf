@@ -162,7 +162,7 @@ export const noPhysicalProperties: Rule.RuleModule = {
       description:
         'Disallow physical style properties (marginLeft, paddingRight, left, right, textAlign: left/right, borderLeft*) in favour of logical ones.',
       recommended: true,
-      url: 'https://github.com/harf-rtl/harf/blob/main/packages/eslint-plugin/README.md#no-physical-properties',
+      url: 'https://github.com/Ali-mohamed843/harf/blob/main/packages/eslint-plugin/README.md#no-physical-properties',
     },
     fixable: 'code',
     schema: [

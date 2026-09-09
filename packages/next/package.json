@@ -4,14 +4,14 @@
   "description": "Next.js App Router adapter for Harf: server-side dir on <html>, RSC-safe direction access, and a Tailwind plugin for mirroring and bidi utilities.",
   "license": "MIT",
   "author": "Harf contributors",
-  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/next#readme",
+  "homepage": "https://github.com/Ali-mohamed843/harf/tree/main/packages/next#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harf-rtl/harf.git",
+    "url": "git+https://github.com/Ali-mohamed843/harf.git",
     "directory": "packages/next"
   },
   "bugs": {
-    "url": "https://github.com/harf-rtl/harf/issues"
+    "url": "https://github.com/Ali-mohamed843/harf/issues"
   },
   "keywords": [
     "rtl",

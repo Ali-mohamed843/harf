@@ -4,14 +4,14 @@
   "description": "Framework-agnostic RTL and Arabic logic: direction resolution, logical style transforms, bidi isolation, numerals, dates and currency. Zero runtime dependencies.",
   "license": "MIT",
   "author": "Harf contributors",
-  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/core#readme",
+  "homepage": "https://github.com/Ali-mohamed843/harf/tree/main/packages/core#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harf-rtl/harf.git",
+    "url": "git+https://github.com/Ali-mohamed843/harf.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/harf-rtl/harf/issues"
+    "url": "https://github.com/Ali-mohamed843/harf/issues"
   },
   "keywords": [
     "rtl",

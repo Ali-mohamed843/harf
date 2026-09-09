@@ -4,14 +4,14 @@
   "description": "React Native adapter for Harf: direction switching without an app restart, logical StyleSheet integration, icon mirroring, gesture and animation helpers.",
   "license": "MIT",
   "author": "Harf contributors",
-  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/native#readme",
+  "homepage": "https://github.com/Ali-mohamed843/harf/tree/main/packages/native#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harf-rtl/harf.git",
+    "url": "git+https://github.com/Ali-mohamed843/harf.git",
     "directory": "packages/native"
   },
   "bugs": {
-    "url": "https://github.com/harf-rtl/harf/issues"
+    "url": "https://github.com/Ali-mohamed843/harf/issues"
   },
   "keywords": [
     "rtl",

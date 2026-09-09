@@ -4,14 +4,14 @@
   "description": "ESLint rules with autofix for RTL correctness: no physical style properties, no physical Tailwind classes, require bidi isolation.",
   "license": "MIT",
   "author": "Harf contributors",
-  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/eslint-plugin#readme",
+  "homepage": "https://github.com/Ali-mohamed843/harf/tree/main/packages/eslint-plugin#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harf-rtl/harf.git",
+    "url": "git+https://github.com/Ali-mohamed843/harf.git",
     "directory": "packages/eslint-plugin"
   },
   "bugs": {
-    "url": "https://github.com/harf-rtl/harf/issues"
+    "url": "https://github.com/Ali-mohamed843/harf/issues"
   },
   "keywords": [
     "eslint",

@@ -108,7 +108,7 @@ export const requireBidiIsolation: Rule.RuleModule = {
       description:
         'Warn when a value is interpolated into a template literal containing Arabic or other RTL text without bidi isolation.',
       recommended: true,
-      url: 'https://github.com/harf-rtl/harf/blob/main/packages/eslint-plugin/README.md#require-bidi-isolation',
+      url: 'https://github.com/Ali-mohamed843/harf/blob/main/packages/eslint-plugin/README.md#require-bidi-isolation',
     },
     hasSuggestions: true,
     schema: [

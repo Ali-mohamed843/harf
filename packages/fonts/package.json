@@ -4,14 +4,14 @@
   "description": "Arabic font metric presets: recommended line heights, optical size adjustments, safe padding and mixed-script fallback chains.",
   "license": "MIT",
   "author": "Harf contributors",
-  "homepage": "https://github.com/harf-rtl/harf/tree/main/packages/fonts#readme",
+  "homepage": "https://github.com/Ali-mohamed843/harf/tree/main/packages/fonts#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harf-rtl/harf.git",
+    "url": "git+https://github.com/Ali-mohamed843/harf.git",
     "directory": "packages/fonts"
   },
   "bugs": {
-    "url": "https://github.com/harf-rtl/harf/issues"
+    "url": "https://github.com/Ali-mohamed843/harf/issues"
   },
   "keywords": [
     "arabic",

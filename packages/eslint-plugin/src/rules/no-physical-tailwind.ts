@@ -147,7 +147,7 @@ export const noPhysicalTailwind: Rule.RuleModule = {
       description:
         'Disallow physical Tailwind classes (ml-, mr-, pl-, pr-, left-, right-, text-left, text-right) in favour of logical ones.',
       recommended: true,
-      url: 'https://github.com/harf-rtl/harf/blob/main/packages/eslint-plugin/README.md#no-physical-tailwind',
+      url: 'https://github.com/Ali-mohamed843/harf/blob/main/packages/eslint-plugin/README.md#no-physical-tailwind',
     },
     fixable: 'code',
     schema: [

@@ -3,7 +3,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "harf-rtl/harf"
+      "repo": "Ali-mohamed843/harf"
     }
   ],
   "commit": false,
