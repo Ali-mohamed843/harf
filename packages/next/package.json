@@ -1,6 +1,6 @@
 {
   "name": "@harf/next",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Next.js App Router adapter for Harf: server-side dir on <html>, RSC-safe direction access, and a Tailwind plugin for mirroring and bidi utilities.",
   "license": "MIT",
   "author": "Harf contributors",

@@ -1,6 +1,6 @@
 {
   "name": "@harf/react",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "React (web) adapter for Harf: DirectionProvider, useDirection, useLogicalStyles, <Bidi>.",
   "license": "MIT",
   "author": "Harf contributors",

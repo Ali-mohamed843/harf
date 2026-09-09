@@ -1,6 +1,6 @@
 {
   "name": "@harf/native",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "React Native adapter for Harf: direction switching without an app restart, logical StyleSheet integration, icon mirroring, gesture and animation helpers.",
   "license": "MIT",
   "author": "Harf contributors",

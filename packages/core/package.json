@@ -1,6 +1,6 @@
 {
   "name": "@harf/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Framework-agnostic RTL and Arabic logic: direction resolution, logical style transforms, bidi isolation, numerals, dates and currency. Zero runtime dependencies.",
   "license": "MIT",
   "author": "Harf contributors",

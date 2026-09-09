@@ -1,6 +1,6 @@
 {
   "name": "@harf/eslint-plugin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "ESLint rules with autofix for RTL correctness: no physical style properties, no physical Tailwind classes, require bidi isolation.",
   "license": "MIT",
   "author": "Harf contributors",
