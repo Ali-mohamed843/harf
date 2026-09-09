@@ -89,7 +89,10 @@ jobs:
   changeset:
     name: changeset present
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    # Dependabot never writes changesets, and a dependency bump is not a change
+    # a consumer reads about in a changelog. Requiring one would make every
+    # dependency PR permanently red.
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v4
         with:

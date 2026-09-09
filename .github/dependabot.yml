@@ -7,9 +7,51 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: 'chore(deps)'
+    # One PR per group rather than one per package. Eight separate PRs on the
+    # first day of a repository's life is noise, and each costs a full CI run.
+    groups:
+      dev-tooling:
+        patterns:
+          - 'eslint*'
+          - '@typescript-eslint/*'
+          - 'prettier*'
+          - 'vitest'
+          - '@vitest/*'
+          - 'tsup'
+          - 'turbo'
+          - 'typescript'
+        update-types: ['minor', 'patch']
+      testing:
+        patterns:
+          - 'jest*'
+          - 'babel-jest'
+          - '@testing-library/*'
+          - '@types/jest'
+        update-types: ['minor', 'patch']
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+      # React Native and Expo move together; bumping one alone usually breaks
+      # the other, and the limits table is written against a specific pairing.
+      react-native:
+        patterns:
+          - 'react-native*'
+          - '@react-native/*'
+          - 'expo*'
+      changesets:
+        patterns:
+          - '@changesets/*'
+        update-types: ['minor', 'patch']
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
     commit-message:
       prefix: 'chore(ci)'
+    groups:
+      actions:
+        patterns: ['*']
