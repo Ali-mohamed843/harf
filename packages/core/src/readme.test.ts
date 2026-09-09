@@ -1,9 +1,14 @@
 /**
- * Every literal output claimed in a README, asserted.
+ * Every literal output the root README and this package's README claim.
  *
  * The rule for this project is that no README states a result that is not
- * backed by a test. This file is that backing. When a claim in a README
- * changes, this file changes with it — and if it does not, CI fails.
+ * backed by a test. This file is that backing for `@harf/core`; each other
+ * package has its own `readme.test.ts` for the claims it owns.
+ *
+ * Deliberately imports nothing outside this package. A test that reaches into
+ * a sibling's `src/` by relative path drags that package into this one's
+ * TypeScript program, and if the sibling imports back — as `@harf/next` does —
+ * the two only typecheck when one of them happens to have been built already.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -25,9 +30,6 @@ import {
   toArabicDigits,
   toWesternDigits,
 } from './index';
-import { arabicSafeText, fontFamilyStack } from '../../fonts/src/index';
-import { toLogicalClass } from '../../eslint-plugin/src/rules/no-physical-tailwind';
-import { getDirection, htmlDirectionProps, negotiateLocale } from '../../next/src/server';
 
 describe('root README — the headline example', () => {
   const styles = createStyles({
@@ -196,58 +198,5 @@ describe('@harf/core README — the escape hatch', () => {
   it('isolates and strips losslessly', () => {
     const value = 'Karnak Holidays 2026';
     expect(stripBidi(isolate(value))).toBe(value);
-  });
-});
-
-describe('@harf/fonts README — the table and the example', () => {
-  it('produces the documented output for Cairo at 16', () => {
-    const style = arabicSafeText({ family: 'Cairo', fontSize: 16 });
-    expect(style.fontSize).toBe(16);
-    expect(style.lineHeight).toBe(28);
-    expect(style.paddingVertical).toBe(1.6);
-    expect(style.fontFamily).toBe('Cairo, Inter, "Helvetica Neue", Arial, sans-serif');
-  });
-
-  it('matches every multiplier in the README table', () => {
-    const claimed: Record<string, number> = {
-      Rubik: 1.5,
-      Tajawal: 1.6,
-      'IBM Plex Sans Arabic': 1.6,
-      Changa: 1.65,
-      Almarai: 1.7,
-      'Noto Sans Arabic': 1.7,
-      Cairo: 1.75,
-      'Noto Naskh Arabic': 2.0,
-      Lateef: 2.0,
-      Amiri: 2.1,
-    };
-    for (const [family, multiplier] of Object.entries(claimed)) {
-      expect(arabicSafeText({ family, fontSize: 100 }).lineHeight).toBe(multiplier * 100);
-    }
-  });
-
-  it('produces the documented fallback chain', () => {
-    expect(fontFamilyStack('Cairo')).toBe(
-      'Cairo, Inter, "Helvetica Neue", Arial, sans-serif',
-    );
-  });
-});
-
-describe('@harf/eslint-plugin README — the fix examples', () => {
-  it('rewrites every class in the documented before/after pair', () => {
-    const before = 'ml-4 pr-2 text-left md:mr-8 hover:border-l-2'.split(' ');
-    const after = 'ms-4 pe-2 text-start md:me-8 hover:border-s-2'.split(' ');
-    expect(before.map((c) => toLogicalClass(c) ?? c)).toEqual(after);
-  });
-});
-
-describe('@harf/next README — the server helpers', () => {
-  it('produces the documented html attributes', () => {
-    expect(htmlDirectionProps('ar-EG')).toEqual({ lang: 'ar-EG', dir: 'rtl' });
-    expect(getDirection({ locale: 'ar-EG' })).toBe('rtl');
-  });
-
-  it('serves an ar-SA browser with ar-EG rather than English', () => {
-    expect(negotiateLocale('ar-SA', ['en', 'ar-EG'])).toBe('ar-EG');
   });
 });
